@@ -20,15 +20,14 @@ def normalize(smilies: List[str]) -> List:
 
     for smiles in smilies:
         mol = Chem.MolFromSmiles(smiles)
-
         if not mol:
             logger.warning(f"{__name__}: {smiles} could not be converted")
+            cleaned_smilies.append(smiles)
             continue
 
         for atom in mol.GetAtoms():
             atom.SetIsotope(0)
             atom.SetAtomMapNum(0)
-
+            
         cleaned_smilies.append(Chem.MolToSmiles(mol))
-
     return cleaned_smilies

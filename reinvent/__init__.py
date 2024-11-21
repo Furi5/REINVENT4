@@ -8,7 +8,7 @@ import sys
 from .logger import *
 from reinvent import models
 from reinvent.models.libinvent.models import vocabulary  # not sure why needed
-
+from reinvent.samping_model import sampling_fun
 
 # support compatibility with older model files
 PATH_MAP = (

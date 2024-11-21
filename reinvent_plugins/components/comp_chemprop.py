@@ -116,8 +116,9 @@ class ChemProp:
                 return_invalid_smiles=True,
                 return_uncertainty=False,
             )
-
+            
         scores = np.array(preds).transpose()[self.keeps]
         scores[scores == "Invalid SMILES"] = np.nan
 
         return ComponentResults(list(scores.astype(float)))
+

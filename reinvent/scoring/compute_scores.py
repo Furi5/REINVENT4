@@ -20,7 +20,7 @@ def compute_component_scores(
     scoring_function: SCORE_FUNC,
     cache,
     filter_mask: Optional[np.ndarray[bool]],
-) -> ComponentResults:
+    ) -> ComponentResults:
     """Compute a single component's scores and cache the results
 
     The mask filters out all SMILES unwanted for score computation: SMILES not
@@ -36,7 +36,6 @@ def compute_component_scores(
 
     # NOTE: if a component has multiple endpoints it needs to declare this!
     number_of_endpoints = getattr(scoring_function, "number_of_endpoints", 1)
-
     masked_scores = [(np.nan,)] * len(smilies)
 
     for i, value in enumerate(filter_mask):

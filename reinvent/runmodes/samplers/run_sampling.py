@@ -11,6 +11,7 @@ import logging
 from torch.utils.tensorboard import SummaryWriter
 import numpy as np
 import torch
+import pandas as pd
 from rdkit import Chem
 
 from reinvent.runmodes import create_adapter
@@ -41,21 +42,26 @@ FRAGMENT_GENERATORS = ["Libinvent", "Linkinvent", "LinkinventTransformer"]
 
 
 def run_sampling(
-    input_config: dict, device, tb_logdir: str, write_config: str = None, *args, **kwargs
+    input_config: dict, 
+    device, 
+    input_smilies: list = None,
+    tb_logdir: str = None, 
+    write_config: str = None, 
+    *args, **kwargs
 ):
     """Sampling run setup"""
 
     logger.info("Starting Sampling")
-
     config = SamplingConfig(**input_config)
+    
     parameters = config.parameters
-    smiles_output_filename = parameters.output_file
-
+    # smiles_output_filename = parameters.output_file
+    smiles_output_filename = None
     agent_model_filename = parameters.model_file
     adapter, _, model_type = create_adapter(agent_model_filename, "inference", device)
 
     logger.info(f"Using generator {model_type}")
-    logger.info(f"Writing sampled SMILES to CSV file {smiles_output_filename}")
+    # logger.info(f"Writing sampled SMILES to CSV file {smiles_output_filename}")
 
     # number of smiles to be generated for each input; consistent with batch_size parameter as used in RL
     # different from batch size used in dataloader which affect cuda memory
@@ -63,19 +69,23 @@ def run_sampling(
     params["batch_size"] = parameters.num_smiles
     sampler, batch_size = setup_sampler(model_type, params, adapter)
     sampler.unique_sequences = False
+    
+    if input_smilies == None:
+        try:
+            smiles_input_filename = parameters.smiles_file
+        except KeyError:
+            smiles_input_filename = None
 
-    try:
-        smiles_input_filename = parameters.smiles_file
-    except KeyError:
-        smiles_input_filename = None
+        input_smilies = None
+        num_input_smilies = 1
 
-    input_smilies = None
-    num_input_smilies = 1
-
-    if smiles_input_filename:
-        input_smilies = read_smiles_csv_file(smiles_input_filename, columns=0)
+        if smiles_input_filename:
+            input_smilies = read_smiles_csv_file(smiles_input_filename, columns=0)
+            num_input_smilies = len(input_smilies)
+    else:
         num_input_smilies = len(input_smilies)
-
+        logger.info(f"Using {num_input_smilies} input SMILES")
+        
     num_total_smilies = parameters.num_smiles * num_input_smilies
 
     logger.info(f"Sampling {num_total_smilies} SMILES from model {agent_model_filename}")
@@ -93,7 +103,7 @@ def run_sampling(
 
     # FIXME: remove atom map numbers from SMILES in chemistry code
     if model_type == "Libinvent":
-        sampled.smilies = normalize(sampled.smilies, keep_all=True)
+        sampled.smilies = normalize(sampled.smilies)
 
     kwargs = {}
     scores = [-1] * len(sampled.items2)
@@ -138,9 +148,13 @@ def run_sampling(
 
                 with open(parameters.target_nll_file, "w") as fh:
                     write_csv(fh, HEADERS[model_type], zip(input, target, tanimoto, nlls))
+    
+    # with open(smiles_output_filename, "w") as fh:
+    #     write_csv(fh, HEADERS[model_type], records)
+    df = pd.DataFrame.from_records(records, columns=HEADERS[model_type])
+    return df
 
-    with open(smiles_output_filename, "w") as fh:
-        write_csv(fh, HEADERS[model_type], records)
+    
 
 
 def filter_valid(sampled: SampleBatch) -> SampleBatch:
@@ -152,13 +166,12 @@ def filter_valid(sampled: SampleBatch) -> SampleBatch:
 
     state = np.array(sampled.states)
     mask_idx = state == SmilesState.VALID
-
+    
     # For Reinvent, items1 is None
     items1 = list(np.array(sampled.items1)[mask_idx]) if sampled.items1 else None
     items2 = list(np.array(sampled.items2)[mask_idx])
 
-    nlls = sampled.nlls[mask_idx]
-
+    nlls = sampled.nlls[mask_idx]    
     smilies = list(np.array(sampled.smilies)[mask_idx])
     states = sampled.states[mask_idx]
 

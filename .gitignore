@@ -4,7 +4,6 @@ package.json
 .vscode
 tags
 .idea
-/configs/config.json
 .env
 
 # Coverage.py output
@@ -25,3 +24,10 @@ mprofile_*.dat
 # Notebooks
 .ipynb_checkpoints/
 *.ipynb
+
+
+/configs2/
+/notebooks2/
+/optmol/
+/tests/
+/contrib2/

@@ -23,7 +23,6 @@ class Parameters:
 class ValueMapping(Transform, param_cls=Parameters):
     def __init__(self, params: Parameters):
         super().__init__(params)
-
         self.mapping = {str(k): float(v) for k, v in params.mapping.items()}
         logger.info(f"{type(self).__name__}: using mapping {self.mapping}")
 
