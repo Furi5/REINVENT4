@@ -27,7 +27,7 @@ REINVENT4 是一个用于小分子设计的工具，适用于全新分子设计�
     pip3 install torch torchvision torchaudio --index-url https://download.pytorch.org/whl/cu118
     ```
 
-    > **Note**:  请在 REINVENT4/reinvent/sampling_model.py 文件中，将 MODELS_PATH 设置为本地 priors 文件夹的绝对路径。
+    > **Note**:  在 REINVENT4/reinvent/sampling_model.py 文件中，设置 MODELS_PATH 为本地 priors 文件夹的绝对路径。
 
 安装
 ------------
