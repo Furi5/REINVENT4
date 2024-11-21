@@ -1,7 +1,15 @@
 REINVENT 4
 ==========
 
-REINVENT4 是一个用于小分子设计的工具，适用于全新分子设计（de novo design）、骨架跃迁（scaffold hopping）、linker设计（linker design）、分子优化(molecule optimization)。
+REINVENT4 是一个用于小分子设计的工具，适用于全新分子设计（de novo design）、骨架设计（scaffold design）、linker设计（linker design）、分子优化(molecule optimization)。
+
+功能
+------------
+
+- **de novo design**： 全新分子设计不需要输入分子
+- **scaffold design**：骨架跃迁，需要输入骨架
+- **linker design**：linker设计， 需要输入两个 warheads
+- **molecule optimization**： 分子优化，需要输入分子
 
 环境
 ------------
@@ -15,7 +23,7 @@ REINVENT4 是一个用于小分子设计的工具，适用于全新分子设计�
     conda activate reinvent4
     pip install -r requirements-linux-64.lock
 
-    # 若有 GPU，则需要手动安装CUDA对应的 torch 版本
+    # 需要手动安装CUDA对应的 torch 版本
     pip3 install torch torchvision torchaudio --index-url https://download.pytorch.org/whl/cu118
     ```
 
@@ -63,11 +71,14 @@ pip install --no-deps .
 文件结构
 ------------
 
-- 'reinvent/': 包含主要代码
-  'samping_model.py':基于 samping 模式做分子生成和优化的主要代码
-- 'priors': 分子生成的模型文件
-- 'example_file': 运行的不同分子生成方法的示例文件
-- 'test_samping.py': 测试文件
+- `reinvent/`: 包含主要代码
+  - `samping_model.py`:基于 samping 模式做分子生成和优化的主要代码
+- `priors/`: 分子生成的模型文件
+- `example_file/`: 运行的不同分子生成方法的示例文件
+  - `Linker_design_example.smi`: Linker_design模式下的示例文件，里面有两个warheads
+  - `Molecule_optimization_example.smi`: Molecule_optimization模式下的示例文件，里面有两个分子
+  - `Scaffold_design_example.smi`：Scaffold_design 模式下的示例文件，里面有两个骨架
+- `test_samping.py/`: 测试文件
   
 测试
 ------------
