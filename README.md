@@ -23,7 +23,12 @@ REINVENT4 是一个用于小分子设计的工具，适用于全新分子设计�
     conda activate reinvent4
     pip install -r requirements-linux-64.lock
 
-    # 需要手动安装CUDA对应的 torch 版本
+
+    ```
+
+    如需运行 GPU 版本，需手动安装与 CUDA 版本匹配的 PyTorch,[参考torch官网](https://pytorch.org/), 。以 CUDA 11.8 为例，安装命令如下:
+
+    ```shell
     pip3 install torch torchvision torchaudio --index-url https://download.pytorch.org/whl/cu118
     ```
 
