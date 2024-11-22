@@ -26,8 +26,6 @@ mprofile_*.dat
 *.ipynb
 
 
-/configs2/
-/notebooks2/
+/configs/
 /optmol/
-/tests/
-/contrib2/
+/notebooks2/

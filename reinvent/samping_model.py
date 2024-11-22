@@ -136,8 +136,8 @@ def sampling_fun(
 
 if __name__ == "__main__":
     try:
-        # Input file containing scaffold
-        small_molecule_file = '/home/jovyan/released_projects/reinvent4/example_file/Molecule_optimization_example.smi'
+        # Input file 
+        small_molecule_file = '/home/jovyan/my_code/REINVENT4/example_file/Molecule_optimization_example.smi'
         input_smiles = read_smiles_csv_file(small_molecule_file, columns=0)
 
         # Run sampling

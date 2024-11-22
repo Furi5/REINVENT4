@@ -53,7 +53,7 @@ def run_sampling(
 
     logger.info("Starting Sampling")
     config = SamplingConfig(**input_config)
-    
+
     parameters = config.parameters
     # smiles_output_filename = parameters.output_file
     smiles_output_filename = None
